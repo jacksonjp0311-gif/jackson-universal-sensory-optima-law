@@ -1,9 +1,12 @@
-# ?? Jackson Universal Sensory Optima Engine (SAFE RELEASE)
-# Codex-aligned placeholder. Core ?? kernel redacted.
+﻿# 𓂀 Jackson Universal Sensory Optima Engine (SAFE PUBLIC VERSION)
+# Codex internal algorithms redacted.
 
 def compute_optima(env):
-    # Placeholder - full engine stored internally.
-    return {"lambda_star": None, "note": "Public-safe placeholder"}
+    return {
+        "lambda_star": None,
+        "mode_star": None,
+        "note": "public-safe placeholder"
+    }
 
 if __name__ == "__main__":
-    print("Jackson Universal Sensory Optima Law � Safe Engine Loaded")
+    print("Sensory Optima Law — Engine Loaded (Public Version)")
