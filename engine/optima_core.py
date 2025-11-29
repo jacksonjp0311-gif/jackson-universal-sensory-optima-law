@@ -35,7 +35,7 @@
 
 from __future__ import annotations
 
-from typing import Dict, Any, List, Tuple
+from typing import Dict, Any, List
 
 H7_TARGET: float = 0.70
 
@@ -68,9 +68,9 @@ def _mode_score(mode: Dict[str, Any], weights: Dict[str, float]) -> float:
 
 def compute_optima(env: Dict[str, Any]) -> Dict[str, Any]:
     """
-    Compute a Jackson-style "sensory optima" choice.
+    Compute a Jackson-style sensory optima choice (public-safe).
 
-    Expected env structure (public demo):
+    Expected env structure (demo):
 
         {
             "modes": [
@@ -89,20 +89,12 @@ def compute_optima(env: Dict[str, Any]) -> Dict[str, Any]:
                 "cost": 0.25,
             }
         }
-
-    Returns a dict with:
-        - lambda_star : λ* of best mode
-        - mode_star   : name of best mode
-        - score_star  : score of best mode
-        - delta_phi   : |score* - H7|
-        - alignment   : 1 - ΔΦ, clipped to [0, 1]
-        - ranking     : list[(name, score)]
-        - triad       : {energy, information, consciousness}
-        - note        : public-safe disclaimer
     """
+
     modes: List[Dict[str, Any]] = env.get("modes", []) or []
     weights: Dict[str, float] = env.get("weights", DEFAULT_WEIGHTS)
 
+    # No modes: return safe placeholder
     if not modes:
         return {
             "lambda_star": None,
@@ -116,38 +108,42 @@ def compute_optima(env: Dict[str, Any]) -> Dict[str, Any]:
                 "information": 0.0,
                 "consciousness": 0.0,
             },
-            "note": "No modes provided; public-safe placeholder result.",
+            "H7_target": H7_TARGET,
+            "note": "No modes provided; public-safe placeholder.",
         }
 
+    # Score each mode
     scored: List[Dict[str, Any]] = []
     for m in modes:
         s = _mode_score(m, weights)
         scored.append(
             {
                 "name": m.get("name", "unnamed"),
-                "lambda": m.get("lambda", None),
+                "lambda": float(m.get("lambda", 0.0)),
                 "score": float(s),
             }
         )
 
+    # Rank the modes by score
     ranked = sorted(scored, key=lambda r: r["score"], reverse=True)
     best = ranked[0]
 
     score_star = float(best["score"])
+    lambda_star = float(best["lambda"])
+    mode_star = best["name"]
+
+    # Codex-style coherence metric
     delta_phi = abs(score_star - H7_TARGET)
     alignment = max(0.0, 1.0 - delta_phi)
 
-    energy = float(
-        sum(float(m.get("snr", 0.0)) for m in modes) / max(len(modes), 1)
-    )
-    information = float(
-        sum(float(m.get("coverage", 0.0)) for m in modes) / max(len(modes), 1)
-    )
+    # Triadic averages (Codex mapping)
+    energy = sum(float(m.get("snr", 0.0)) for m in modes) / max(len(modes), 1)
+    information = sum(float(m.get("coverage", 0.0)) for m in modes) / max(len(modes), 1)
     consciousness = alignment
 
     return {
-        "lambda_star": best["lambda"],
-        "mode_star": best["name"],
+        "lambda_star": lambda_star,
+        "mode_star": mode_star,
         "score_star": score_star,
         "delta_phi": delta_phi,
         "alignment": alignment,
