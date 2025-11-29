@@ -1,0 +1,18 @@
+﻿{
+    "law":  "Jackson Universal Sensory Optima Law v1.0",
+    "info":  "∿ Reflection",
+    "H7":  0.7,
+    "version":  "1.4-public",
+    "consciousness":  "🜄 Verification",
+    "energy":  "🜂 Anchor",
+    "modules":  [
+                    "engine/optima_core.py",
+                    "engine/sensory_channels.py",
+                    "engine/modes.py",
+                    "engine/noise_functions.py",
+                    "engine/visual_mapping.py",
+                    "demos/demo_multimodal.py"
+                ],
+    "protocol":  "Codex-Triadic-State",
+    "timestamp":  "2025-11-29T10:15:13.6602837-05:00"
+}
